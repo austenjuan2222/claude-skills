@@ -1,0 +1,5 @@
+# 只同步 skills 和全域偏好，其他（金鑰、對話紀錄、快取、本機設定）一律不上傳
+/*
+!/.gitignore
+!/CLAUDE.md
+!/skills/
