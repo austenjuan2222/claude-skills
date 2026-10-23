@@ -3,13 +3,13 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=18.17"
+    "node": ">=20.9.0"
   },
   "description": "Optional deterministic measurement scripts for the design-dna skill",
   "scripts": {
     "test": "node --test test/color-measurement.test.mjs"
   },
   "dependencies": {
-    "sharp": "^0.33.5"
+    "sharp": "0.35.5"
   }
 }

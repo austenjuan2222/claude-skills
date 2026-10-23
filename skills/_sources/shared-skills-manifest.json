@@ -1,7 +1,7 @@
 {
   "plugin": {
     "name": "austen-shared-skills",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Austen personal shared collection: 73 skills for design, motion, 3D, writing, video, security and reverse engineering. Includes bundled scripts, references and 17 internal genjutsu modules.",
     "author": {
       "name": "Austen"
@@ -102,10 +102,10 @@
   ],
   "custom_skill_union_count": 81,
   "internal_modules": 17,
-  "zip_bytes": 44452283,
-  "zip_sha256": "378f5f6f0b8d0623c62a66a97c286e033c0e91f05ba97aaa64b88b50972c8b9b",
+  "zip_bytes": 44477740,
+  "zip_sha256": "4303f052504a17e5218f0f9f816f8136bccb9b9596feaff6f79e5ed78f7b7b82",
   "bundled_files": 1307,
-  "account_installation_verified": true,
+  "account_installation_verified": false,
   "portability_changes": [
     "Internal module name ui-ux-pro-max changed to genjutsu-ui-ux-pro-max to avoid collision; its directory is unchanged."
   ],
@@ -114,5 +114,9 @@
   "account_plugin_enabled": true,
   "claude_code_cli_version": "2.1.309",
   "claude_code_cli_logged_in": false,
-  "local_fallback_primary_skills": 81
+  "local_fallback_primary_skills": 81,
+  "cowork_update_pending": true,
+  "design_dna_sharp": "0.35.5",
+  "update_policy": "Weekly check and review only; apply requires exact report approval; Cowork upload is a separate verified step.",
+  "scheduler": "Claude built-in scheduled task; Windows task disabled; account task setup pending"
 }

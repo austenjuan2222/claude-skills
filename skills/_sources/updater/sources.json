@@ -1,0 +1,328 @@
+[
+  {
+    "repo": "CloudAI-X/threejs-skills",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/threejs-animation",
+        "name": "threejs-animation"
+      },
+      {
+        "path": "skills/threejs-asset-pipeline",
+        "name": "threejs-asset-pipeline"
+      },
+      {
+        "path": "skills/threejs-fundamentals",
+        "name": "threejs-fundamentals"
+      },
+      {
+        "path": "skills/threejs-geometry",
+        "name": "threejs-geometry"
+      },
+      {
+        "path": "skills/threejs-interaction",
+        "name": "threejs-interaction"
+      },
+      {
+        "path": "skills/threejs-lighting",
+        "name": "threejs-lighting"
+      },
+      {
+        "path": "skills/threejs-loaders",
+        "name": "threejs-loaders"
+      },
+      {
+        "path": "skills/threejs-materials",
+        "name": "threejs-materials"
+      },
+      {
+        "path": "skills/threejs-performance",
+        "name": "threejs-performance"
+      },
+      {
+        "path": "skills/threejs-postprocessing",
+        "name": "threejs-postprocessing"
+      },
+      {
+        "path": "skills/threejs-react-three-fiber",
+        "name": "threejs-react-three-fiber"
+      },
+      {
+        "path": "skills/threejs-shaders",
+        "name": "threejs-shaders"
+      },
+      {
+        "path": "skills/threejs-textures",
+        "name": "threejs-textures"
+      }
+    ]
+  },
+  {
+    "repo": "greensock/gsap-skills",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/gsap-core",
+        "name": "gsap-core"
+      },
+      {
+        "path": "skills/gsap-frameworks",
+        "name": "gsap-frameworks"
+      },
+      {
+        "path": "skills/gsap-performance",
+        "name": "gsap-performance"
+      },
+      {
+        "path": "skills/gsap-plugins",
+        "name": "gsap-plugins"
+      },
+      {
+        "path": "skills/gsap-react",
+        "name": "gsap-react"
+      },
+      {
+        "path": "skills/gsap-scrolltrigger",
+        "name": "gsap-scrolltrigger"
+      },
+      {
+        "path": "skills/gsap-timeline",
+        "name": "gsap-timeline"
+      },
+      {
+        "path": "skills/gsap-utils",
+        "name": "gsap-utils"
+      }
+    ]
+  },
+  {
+    "repo": "lottiefiles/motion-design-skill",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/motion-design",
+        "name": "motion-design"
+      }
+    ]
+  },
+  {
+    "repo": "AThevon/genjutsu",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/_jutsu",
+        "name": "_jutsu"
+      },
+      {
+        "path": "skills/bunshin",
+        "name": "bunshin"
+      },
+      {
+        "path": "skills/cast",
+        "name": "cast"
+      },
+      {
+        "path": "skills/paint",
+        "name": "paint"
+      }
+    ]
+  },
+  {
+    "repo": "zanwei/design-dna",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "",
+        "name": "design-dna"
+      }
+    ]
+  },
+  {
+    "repo": "WenyuChiou/awesome-agentic-ai-zh",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "examples/stage-5/tool-calling-tutor",
+        "name": "tool-calling-tutor"
+      }
+    ]
+  },
+  {
+    "repo": "harry0703/MoneyPrinterTurbo",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "docs/skill",
+        "name": "moneyprinterturbo-video"
+      }
+    ]
+  },
+  {
+    "repo": "heygen-com/hyperframes",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/figma",
+        "name": "figma"
+      },
+      {
+        "path": "skills/hyperframes",
+        "name": "hyperframes"
+      },
+      {
+        "path": "skills/hyperframes-cli",
+        "name": "hyperframes-cli"
+      },
+      {
+        "path": "skills/hyperframes-registry",
+        "name": "hyperframes-registry"
+      },
+      {
+        "path": "skills/media-use",
+        "name": "media-use"
+      },
+      {
+        "path": "skills/remotion-to-hyperframes",
+        "name": "remotion-to-hyperframes"
+      },
+      {
+        "path": "skills/slideshow",
+        "name": "slideshow"
+      },
+      {
+        "path": ".claude/skills/captions-overlay",
+        "name": "captions-overlay"
+      },
+      {
+        "path": ".claude/skills/changelog-video",
+        "name": "changelog-video"
+      },
+      {
+        "path": ".claude/skills/cut-the-curve",
+        "name": "cut-the-curve"
+      },
+      {
+        "path": ".claude/skills/motion-doctrine",
+        "name": "motion-doctrine"
+      },
+      {
+        "path": ".claude/skills/oversized-cursor",
+        "name": "oversized-cursor"
+      },
+      {
+        "path": ".claude/skills/seam-craft",
+        "name": "seam-craft"
+      },
+      {
+        "path": "registry/blocks/canopy-part-title",
+        "name": "canopy-part-title"
+      },
+      {
+        "path": "registry/blocks/code-slice-hero",
+        "name": "code-slice-hero"
+      },
+      {
+        "path": "registry/blocks/cuboid-carousel",
+        "name": "cuboid-carousel"
+      },
+      {
+        "path": "registry/blocks/frost-sequence-camera-orbit",
+        "name": "frost-sequence-camera-orbit"
+      },
+      {
+        "path": "registry/blocks/glass-shard-title",
+        "name": "glass-shard-title"
+      },
+      {
+        "path": "registry/blocks/orbit-card",
+        "name": "orbit-card"
+      },
+      {
+        "path": "registry/blocks/wireframe-portal-title",
+        "name": "wireframe-portal-title"
+      }
+    ]
+  },
+  {
+    "repo": "latent-spaces/brag",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/brag",
+        "name": "brag"
+      },
+      {
+        "path": "skills/brag-slim",
+        "name": "brag-slim"
+      }
+    ]
+  },
+  {
+    "repo": "morluto/rea",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": ".agents/skills/rea-analysis-optimization",
+        "name": "rea-analysis-optimization"
+      },
+      {
+        "path": ".agents/skills/rea-changelog-update",
+        "name": "rea-changelog-update"
+      },
+      {
+        "path": ".agents/skills/rea-ci-tests-audit",
+        "name": "rea-ci-tests-audit"
+      },
+      {
+        "path": ".agents/skills/rea-tool-design",
+        "name": "rea-tool-design"
+      },
+      {
+        "path": ".agents/skills/reverse-engineer-anything",
+        "name": "reverse-engineer-anything"
+      }
+    ]
+  },
+  {
+    "repo": "usestrix/strix",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/api-security-testing",
+        "name": "api-security-testing"
+      },
+      {
+        "path": "skills/application-security-testing",
+        "name": "application-security-testing"
+      },
+      {
+        "path": "skills/ci-security-scanning-with-strix",
+        "name": "ci-security-scanning-with-strix"
+      },
+      {
+        "path": "skills/find-security-vulnerabilities-in-code",
+        "name": "find-security-vulnerabilities-in-code"
+      },
+      {
+        "path": "skills/fix-security-vulnerabilities-with-strix",
+        "name": "fix-security-vulnerabilities-with-strix"
+      },
+      {
+        "path": "skills/managed-pentesting-with-strix",
+        "name": "managed-pentesting-with-strix"
+      },
+      {
+        "path": "skills/owasp-top-10-testing",
+        "name": "owasp-top-10-testing"
+      },
+      {
+        "path": "skills/penetration-testing-with-strix",
+        "name": "penetration-testing-with-strix"
+      },
+      {
+        "path": "skills/web-app-penetration-testing",
+        "name": "web-app-penetration-testing"
+      }
+    ]
+  }
+]

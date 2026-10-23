@@ -14,8 +14,8 @@ and returns every encoding at that address: O(log n + matches), without a
 second retained lookup index.
 
 The owning implementation is
-[`KunaStringInventory.ts`](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/../src/kuna/KunaStringInventory.ts), consumed
-by [`KunaStringQueries.ts`](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/../src/kuna/KunaStringQueries.ts). Inspect
+[`KunaStringInventory.ts`](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/src/kuna/KunaStringInventory.ts), consumed
+by [`KunaStringQueries.ts`](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/src/kuna/KunaStringQueries.ts). Inspect
 their current versions before adapting the example. Numeric u64 addresses,
 same-address encodings, duplicate rejection, source digests, caller selection,
 and the existing session lifetime were part of the contract. Full listings and
