@@ -56,7 +56,7 @@ class UpdaterTests(unittest.TestCase):
   self.assertEqual(u.read_json(self.home/'last-apply.json')['status'],'rolled_back')
  def test_missing_upstream_is_not_treated_as_deletion(self):
   source={'repo':'owner/repo','mappings':[{'path':'skills/demo','name':'demo'}]}
-  with patch.object(u,'request',side_effect=[{'sha':'abc'},{'tree':[]}]):
+  with patch.object(u,'snapshot',return_value=('abc',{'tree':[]})):
    with self.assertRaisesRegex(ValueError,'missing or moved'): u.source_plan(source,self.local,self.home/'candidate',['demo/SKILL.md'])
  def test_name_and_dependency_patches_survive(self):
   data=u.patch_bytes('AThevon/genjutsu','skills/_jutsu/ui-ux-pro-max/SKILL.md',b'---\nname: ui-ux-pro-max\n---\n','abc')
@@ -74,7 +74,8 @@ class UpdaterTests(unittest.TestCase):
    if '/commits/' in url: return {'sha':'abc'}
    if '/git/trees/' in url: return {'tree':[{'path':'skills/demo/SKILL.md','type':'blob','mode':'100644','sha':u.git_blob(after)}]}
    return after
-  with patch.object(u,'request',side_effect=fake),patch.object(u,'run',side_effect=AssertionError('check must not execute tools')):
+  tree=fake('url/git/trees/abc')
+  with patch.object(u,'snapshot',return_value=('abc',tree)),patch.object(u,'request',side_effect=fake),patch.object(u,'run',side_effect=AssertionError('check must not execute downloaded code')):
    self.assertEqual(u.check(self.config,self.home),0)
    first=u.read_json(self.home/'latest.json'); self.assertTrue(first['notify'])
    self.assertEqual(u.check(self.config,self.home),0)
@@ -82,7 +83,7 @@ class UpdaterTests(unittest.TestCase):
   self.assertEqual((self.local/'demo/SKILL.md').read_bytes(),before)
  def test_partial_network_failure_blocks_application(self):
   self.config['sources']=[{'repo':'owner/repo','mappings':[]}]
-  with patch.object(u,'request',side_effect=OSError('network offline')):
+  with patch.object(u,'snapshot',side_effect=OSError('network offline')):
    self.assertEqual(u.check(self.config,self.home),1)
   report=u.read_json(Path(u.read_json(self.home/'latest.json')['report']))
   self.assertTrue(report['errors']); self.assertEqual(report['status'],'failed')

@@ -75,10 +75,32 @@ def validate_data(data):
     if re.search(rb'(?:sk-ant-api\d\d-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)',data):
         raise ValueError('Possible credential detected in candidate; review manually')
 
+def snapshot(source, cache):
+    """Fetch public Git metadata without consuming the anonymous GitHub REST quota."""
+    repo=source['repo']; ref=source.get('ref','main')
+    if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9/_.-]*',ref):
+        raise ValueError('Invalid configured repository or ref')
+    directory=contained(cache,repo)
+    directory.parent.mkdir(parents=True,exist_ok=True)
+    def git(*args):
+        result=subprocess.run(['git',*args],check=True,capture_output=True,timeout=180)
+        return result.stdout
+    if not directory.exists():
+        git('clone','--bare','--filter=blob:none','--depth','1','--single-branch','--branch',ref,f'https://github.com/{repo}.git',str(directory))
+        commit=git('-C',str(directory),'rev-parse','HEAD').decode().strip()
+    else:
+        git('-C',str(directory),'fetch','--depth','1','--filter=blob:none','origin',ref)
+        commit=git('-C',str(directory),'rev-parse','FETCH_HEAD').decode().strip()
+    entries=[]
+    for line in git('-C',str(directory),'ls-tree','-r','-z','--full-tree',commit).split(b'\0'):
+        if not line: continue
+        header,path=line.split(b'\t',1); mode,kind,sha=header.decode().split(' ')
+        entries.append({'path':path.decode('utf-8'),'mode':mode,'type':kind,'sha':sha})
+    return commit,{'tree':entries,'truncated':False}
+
 def source_plan(source, local, stage, previous_owned):
     repo=source['repo']
-    commit=request(f'https://api.github.com/repos/{repo}/commits/{source.get("ref","main")}')['sha']
-    tree=request(f'https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1')
+    commit,tree=snapshot(source,stage.parents[2]/'git-cache')
     if tree.get('truncated'): raise ValueError(f'{repo}: truncated tree')
     changes=[]; owned=[]
     for mapping in source['mappings']:
