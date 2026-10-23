@@ -105,7 +105,7 @@
   "zip_bytes": 44477740,
   "zip_sha256": "4303f052504a17e5218f0f9f816f8136bccb9b9596feaff6f79e5ed78f7b7b82",
   "bundled_files": 1307,
-  "account_installation_verified": false,
+  "account_installation_verified": true,
   "portability_changes": [
     "Internal module name ui-ux-pro-max changed to genjutsu-ui-ux-pro-max to avoid collision; its directory is unchanged."
   ],
@@ -115,8 +115,22 @@
   "claude_code_cli_version": "2.1.309",
   "claude_code_cli_logged_in": false,
   "local_fallback_primary_skills": 81,
-  "cowork_update_pending": true,
+  "cowork_update_pending": false,
   "design_dna_sharp": "0.35.5",
   "update_policy": "Weekly check and review only; apply requires exact report approval; Cowork upload is a separate verified step.",
-  "scheduler": "Claude built-in scheduled task; Windows task disabled; account task setup pending"
+  "scheduler": "Claude built-in weekly Monday 09:00 task enabled and UI-verified; Windows task disabled",
+  "claude_scheduled_task": {
+    "name": "Claude skills 每週更新檢查",
+    "enabled": true,
+    "frequency": "weekly",
+    "day": "Monday",
+    "time": "09:00",
+    "timezone_intent": "Asia/Taipei",
+    "verified_date": "2026-10-23",
+    "verification": "Claude UI displayed creation success and enabled weekly Monday 09:00 task card.",
+    "mode": "Cloud upstream check; no automatic skill application"
+  },
+  "account_plugin_version": "1.0.1",
+  "account_verification_date": "2026-10-23",
+  "account_verification": "Claude UI showed version 1.0.1, 90 Skills, enabled toggle and installation-complete notification."
 }
