@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "description": "Offline behavior contracts for the tool-calling-tutor skill. These cases do not claim a model-quality score.",
+  "cases": [
+    {
+      "id": "symptom_a_llm_not_calling",
+      "locale": "zh-TW",
+      "input": "我寫了一個 get_weather tool，也把 tools 傳進去了，可是模型只回文字，沒有呼叫 tool。",
+      "expected_route": "a",
+      "reference": "references/debug-flowchart.md#section-a-symptom-allm-完全不觸發-toolcalls",
+      "must_cover": [
+        "先確認目前 SDK、model 與 tool-calling 支援",
+        "檢查 tool description、邊界、query 是否真的需要工具，以及 schema wrapper",
+        "不要捏造原因比例或保證換 model 就會成功"
+      ]
+    },
+    {
+      "id": "symptom_b_wrong_args",
+      "locale": "en",
+      "input": "The tool was called, but value arrived as '32 Celsius' instead of the number 32.",
+      "expected_route": "b",
+      "reference": "references/schema-evolution.en.md#iteration-0-the-broken-schema",
+      "must_cover": [
+        "check type, required fields, enum, and application-side validation",
+        "walk through the four schema changes instead of claiming a fixed success rate",
+        "do not execute unvalidated model arguments"
+      ]
+    },
+    {
+      "id": "symptom_c_loop_no_end",
+      "locale": "zh-Hans",
+      "input": "ReAct loop 一直调用同一个 tool，跑到最大轮数也没有结束。",
+      "expected_route": "c",
+      "reference": "references/debug-flowchart.zh-Hans.md#section-c-symptom-creact-loop-跑不停",
+      "must_cover": [
+        "检查 assistant history、call ID、tool result 和停止条件",
+        "保留最大轮数并让失败清楚可见",
+        "只要求可检查的短计划，不索取隐藏推理"
+      ]
+    },
+    {
+      "id": "symptom_d_design_from_scratch",
+      "locale": "zh-TW",
+      "input": "我想做一個查 GitHub repository 資料的 tool，但還沒有 schema。",
+      "expected_route": "d",
+      "reference": "references/schema-evolution.md#iteration-0原始壞-schema",
+      "must_cover": [
+        "依序做 define, describe, type, constrain, error handling",
+        "先問使用哪個 SDK，再選正確 schema 外形",
+        "加入 allowlist 與參數驗證"
+      ]
+    },
+    {
+      "id": "route_away_langgraph",
+      "locale": "en",
+      "input": "My LangGraph StateGraph edge is wrong. Can this tool-calling tutor fix it?",
+      "expected_route": "away",
+      "reference": "",
+      "must_cover": [
+        "route framework-specific debugging to Stage 4",
+        "keep MCP, production operations, and general prompting in their own stages"
+      ]
+    }
+  ]
+}

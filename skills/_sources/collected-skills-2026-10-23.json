@@ -1,0 +1,230 @@
+[
+  {
+    "name": "moneyprinterturbo-video",
+    "repo": "harry0703/MoneyPrinterTurbo",
+    "commit": "f063a2b95e0f71f60891ac1c7b53add684bc6a46",
+    "path": "docs/skill"
+  },
+  {
+    "name": "brag",
+    "repo": "latent-spaces/brag",
+    "commit": "069432cac935ed1895859df201c31436c07fb74e",
+    "path": "skills/brag"
+  },
+  {
+    "name": "brag-slim",
+    "repo": "latent-spaces/brag",
+    "commit": "069432cac935ed1895859df201c31436c07fb74e",
+    "path": "skills/brag-slim"
+  },
+  {
+    "name": "figma",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/figma"
+  },
+  {
+    "name": "hyperframes",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/hyperframes"
+  },
+  {
+    "name": "hyperframes-cli",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/hyperframes-cli"
+  },
+  {
+    "name": "hyperframes-registry",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/hyperframes-registry"
+  },
+  {
+    "name": "media-use",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/media-use"
+  },
+  {
+    "name": "remotion-to-hyperframes",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/remotion-to-hyperframes"
+  },
+  {
+    "name": "slideshow",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "skills/slideshow"
+  },
+  {
+    "name": "captions-overlay",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/captions-overlay"
+  },
+  {
+    "name": "changelog-video",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/changelog-video"
+  },
+  {
+    "name": "cut-the-curve",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/cut-the-curve"
+  },
+  {
+    "name": "motion-doctrine",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/motion-doctrine"
+  },
+  {
+    "name": "oversized-cursor",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/oversized-cursor"
+  },
+  {
+    "name": "seam-craft",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": ".claude/skills/seam-craft"
+  },
+  {
+    "name": "canopy-part-title",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/canopy-part-title"
+  },
+  {
+    "name": "code-slice-hero",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/code-slice-hero"
+  },
+  {
+    "name": "cuboid-carousel",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/cuboid-carousel"
+  },
+  {
+    "name": "frost-sequence-camera-orbit",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/frost-sequence-camera-orbit"
+  },
+  {
+    "name": "glass-shard-title",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/glass-shard-title"
+  },
+  {
+    "name": "orbit-card",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/orbit-card"
+  },
+  {
+    "name": "wireframe-portal-title",
+    "repo": "heygen-com/hyperframes",
+    "commit": "2ed882ccf22fdf070e21442e0437b3ae57253405",
+    "path": "registry/blocks/wireframe-portal-title"
+  },
+  {
+    "name": "api-security-testing",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/api-security-testing"
+  },
+  {
+    "name": "application-security-testing",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/application-security-testing"
+  },
+  {
+    "name": "ci-security-scanning-with-strix",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/ci-security-scanning-with-strix"
+  },
+  {
+    "name": "find-security-vulnerabilities-in-code",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/find-security-vulnerabilities-in-code"
+  },
+  {
+    "name": "fix-security-vulnerabilities-with-strix",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/fix-security-vulnerabilities-with-strix"
+  },
+  {
+    "name": "managed-pentesting-with-strix",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/managed-pentesting-with-strix"
+  },
+  {
+    "name": "owasp-top-10-testing",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/owasp-top-10-testing"
+  },
+  {
+    "name": "penetration-testing-with-strix",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/penetration-testing-with-strix"
+  },
+  {
+    "name": "web-app-penetration-testing",
+    "repo": "usestrix/strix",
+    "commit": "594398876f9cd465f00cce626d0cb98bfa5e1662",
+    "path": "skills/web-app-penetration-testing"
+  },
+  {
+    "name": "rea-analysis-optimization",
+    "repo": "morluto/rea",
+    "commit": "3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db",
+    "path": ".agents/skills/rea-analysis-optimization"
+  },
+  {
+    "name": "rea-changelog-update",
+    "repo": "morluto/rea",
+    "commit": "3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db",
+    "path": ".agents/skills/rea-changelog-update"
+  },
+  {
+    "name": "rea-ci-tests-audit",
+    "repo": "morluto/rea",
+    "commit": "3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db",
+    "path": ".agents/skills/rea-ci-tests-audit"
+  },
+  {
+    "name": "rea-tool-design",
+    "repo": "morluto/rea",
+    "commit": "3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db",
+    "path": ".agents/skills/rea-tool-design"
+  },
+  {
+    "name": "reverse-engineer-anything",
+    "repo": "morluto/rea",
+    "commit": "3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db",
+    "path": ".agents/skills/reverse-engineer-anything"
+  },
+  {
+    "name": "tool-calling-tutor",
+    "repo": "WenyuChiou/awesome-agentic-ai-zh",
+    "commit": "3c5356d0ba345a57e54a13965c60261173d47c4b",
+    "path": "examples/stage-5/tool-calling-tutor"
+  }
+]
