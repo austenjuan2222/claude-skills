@@ -8,7 +8,7 @@ What it does:
   1. ~/.claude/skill-index/config.json  machine-local config (scan roots incl. this repo)
   2. ~/.claude/skill-index/skills.db    builds the SQLite + FTS5 index
   3. MCP server `skill-index` registered at user scope (runs from this repo, so `git pull` updates it)
-  4. ~/.claude/settings.json            guard hook (PreToolUse) + pull-and-sync hook (SessionStart)
+  4. ~/.claude/settings.json            guard hook (PreToolUse) + fetch-check-and-sync hook (SessionStart)
   5. ~/.claude/CLAUDE.md                Router prompt inside a marked block; other content is kept
 """
 from __future__ import annotations

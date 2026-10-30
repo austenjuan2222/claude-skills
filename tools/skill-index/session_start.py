@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""SessionStart hook: fast-forward every Git-managed skill root from its remote, then re-index.
+"""SessionStart hook: fetch every Git-managed skill root, report pending updates, then re-index local files.
 
-Silent by design (hook stdout would be injected into the session). Never blocks the session:
-offline, auth prompts, local edits or diverged branches just skip the pull for that repo.
-Outcomes go to session_start.log (last 200 lines kept).
+Never pulls: updates are applied only after the user approves. Prints to stdout (which is injected
+into the session) only when a repo is behind its remote. Never blocks the session: offline or auth
+prompts just skip that repo. Outcomes go to session_start.log (last 200 lines kept).
 """
 from __future__ import annotations
 
@@ -17,34 +17,48 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import skill_index as si  # noqa: E402
 
 LOG = si.CONFIG_PATH.parent / "session_start.log"
-PULL_TIMEOUT = 20  # seconds per repo
+FETCH_TIMEOUT = 20  # seconds per repo
 
 
-def git(root: str, *args: str, timeout: int = PULL_TIMEOUT) -> subprocess.CompletedProcess:
+def git(root: str, *args: str, timeout: int = FETCH_TIMEOUT) -> subprocess.CompletedProcess:
     env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never"}
     return subprocess.run(["git", "-C", root, *args], capture_output=True, text=True,
                           encoding="utf-8", errors="replace", timeout=timeout, env=env)
 
 
-def pull(root: str) -> str:
+def check(root: str) -> tuple[str, int]:
+    """Fetch only; never touches the working tree. Returns (log status, commits behind upstream)."""
     if not (Path(root) / ".git").exists():
-        return "skip (not a git repo root)"
+        return "skip (not a git repo root)", 0
     try:
         if git(root, "remote").stdout.strip() == "":
-            return "skip (no remote)"
-        before = git(root, "rev-parse", "--short", "HEAD").stdout.strip()
-        r = git(root, "pull", "--ff-only", "--quiet")
+            return "skip (no remote)", 0
+        r = git(root, "fetch", "--quiet")
         if r.returncode != 0:
-            return f"skip (pull failed: {(r.stderr or r.stdout).strip().splitlines()[-1:] or ['?']})"
-        after = git(root, "rev-parse", "--short", "HEAD").stdout.strip()
-        return f"updated {before}..{after}" if before != after else "up to date"
-    except (OSError, subprocess.TimeoutExpired) as e:
-        return f"skip ({type(e).__name__})"
+            return f"skip (fetch failed: {(r.stderr or r.stdout).strip().splitlines()[-1:] or ['?']})", 0
+        r = git(root, "rev-list", "--count", "HEAD..@{u}")
+        if r.returncode != 0:
+            return "skip (no upstream branch)", 0
+        behind = int(r.stdout.strip() or 0)
+        return (f"{behind} new commit(s) on remote, not applied" if behind else "up to date"), behind
+    except (OSError, subprocess.TimeoutExpired, ValueError) as e:
+        return f"skip ({type(e).__name__})", 0
 
 
 def main():
     cfg = si.load_config()
-    lines = [f"{root}: {pull(root)}" for root in cfg["roots"] if os.path.isdir(root)]
+    lines, notices = [], []
+    for root in cfg["roots"]:
+        if not os.path.isdir(root):
+            continue
+        status, behind = check(root)
+        lines.append(f"{root}: {status}")
+        if behind:
+            notices.append(f"- {root}: {behind} new commit(s) on GitHub (log: git -C \"{root}\" log --oneline HEAD..@{{u}})")
+    if notices:
+        # stdout is injected into the session, so this is how Claude learns to remind the user
+        print("[skill-index] Skill repo updates are available but NOT applied:\n" + "\n".join(notices)
+              + "\nTell the user, show what changed, and only run `git pull --ff-only` there after they approve.")
     try:
         res = si.sync(cfg, quiet=True)
         lines.append(f"sync: +{res['added']} ~{res['updated']} -{res['removed']} total={res['total']}")
