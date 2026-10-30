@@ -3,3 +3,7 @@
 !/.gitignore
 !/CLAUDE.md
 !/skills/
+!/tools/
+# Python 快取不上傳
+__pycache__/
+*.pyc

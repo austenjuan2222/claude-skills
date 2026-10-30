@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Optional: copy to .git/hooks/post-merge and .git/hooks/post-commit to re-index right after
+# reviewed changes land (SessionStart already covers new sessions).
+python "$(git rev-parse --show-toplevel)/tools/skill-index/skill_index.py" sync --quiet >/dev/null 2>&1 || true
