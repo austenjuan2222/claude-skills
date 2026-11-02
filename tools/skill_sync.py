@@ -24,8 +24,12 @@ LOG = []
 CMD_RE = re.compile(r"<command-name>/?([^<\s]+)</command-name>")
 
 
+QUIET = False
+
+
 def log(msg=""):
-    print(msg)
+    if not QUIET:
+        print(msg)
     LOG.append(str(msg))
 
 
@@ -415,10 +419,44 @@ def reindex(repo, dry):
         log("找不到 tools/skill-index/session_start.py")
 
 
+def install_hook():
+    settings = HOME / ".claude" / "settings.json"
+    cmd = f'python "{Path(__file__).resolve()}" --weekly'
+    data = {}
+    if settings.exists():
+        raw = settings.read_text(encoding="utf-8")
+        data = json.loads(raw) if raw.strip() else {}
+        bak = settings.with_name(f"settings.json.bak-{dt.datetime.now(TZ):%Y%m%d%H%M%S}")
+        bak.write_text(raw, "utf-8")
+        print(f"已備份：{bak}")
+    groups = data.setdefault("hooks", {}).setdefault("SessionStart", [])
+    if any("skill_sync.py" in h.get("command", "") for g in groups for h in g.get("hooks", [])):
+        print("hook 已存在，未重複加入")
+        return 0
+    groups.append({"matcher": "startup", "hooks": [{"type": "command", "command": cmd, "timeout": 300}]})
+    settings.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
+    print(f"已加入 SessionStart hook：{cmd}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--weekly", action="store_true", help="距上次成功執行未滿 7 天就跳過；只輸出摘要")
+    ap.add_argument("--install-hook", action="store_true", help="在 Claude Code 啟動時自動執行 --weekly")
     a = ap.parse_args()
+    if a.install_hook:
+        return install_hook()
+    stamp = HOME / ".claude" / "skill-sync-last.txt"
+    if a.weekly:
+        global QUIET
+        QUIET = True
+        try:
+            last = dt.datetime.fromisoformat(stamp.read_text(encoding="utf-8").strip())
+            if dt.datetime.now(TZ) - last < dt.timedelta(days=7):
+                return 0
+        except (OSError, ValueError):
+            pass
     now = dt.datetime.now(TZ)
     today = now.date().isoformat()
     host = socket.gethostname()
@@ -491,8 +529,13 @@ def main():
         log(f"兩台合併使用率：{merged['usage_rate']:.1%}")
     logf = HOME / f"skill-sync-{today}-{host}.log"
     logf.write_text("\n".join(LOG), "utf-8")
+    if not offline and not a.dry_run:
+        stamp.write_text(now.isoformat(), "utf-8")
+    if QUIET:
+        i = max(i for i, l in enumerate(LOG) if "## 摘要" in l)
+        print("[每週 skills 同步] " + " | ".join(LOG[i + 1:]))
     print(f"\n完整紀錄：{logf}")
-    return 1 if problems else 0
+    return 0 if QUIET else (1 if problems else 0)  # hook 模式不回傳錯誤碼，避免干擾啟動
 
 
 if __name__ == "__main__":
