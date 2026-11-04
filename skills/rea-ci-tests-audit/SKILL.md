@@ -9,8 +9,8 @@ Establish which checks still catch real regressions and which costs can be
 removed without losing that protection. The outcome may be a verified fix,
 an evidence-backed recommendation, or an explicit decision to stop.
 
-Follow the checkout's `AGENTS.md`, [testing guide](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/docs/testing.md),
-and [contribution rules](https://github.com/morluto/rea/blob/3c5c887a2cc7371a94fe0fd8b6c478dbf2af60db/CONTRIBUTING.md). Use their current commands
+Follow the checkout's `AGENTS.md`, [testing guide](https://github.com/morluto/rea/blob/89317a39fab23df81efa4331311d09d2110377bd/docs/testing.md),
+and [contribution rules](https://github.com/morluto/rea/blob/89317a39fab23df81efa4331311d09d2110377bd/CONTRIBUTING.md). Use their current commands
 and pinned toolchain, rather than commands remembered from an earlier audit.
 Preserve the requested scope: investigation alone does not authorize edits;
 this skill does not grant permission to publish issues, push, or merge. Existing
