@@ -324,5 +324,43 @@
         "name": "web-app-penetration-testing"
       }
     ]
+  },
+  {
+    "repo": "Appllama/appllama-skills",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/appllama-app-design-skill",
+        "name": "appllama-app-design-skill"
+      },
+      {
+        "path": "skills/appllama-usage",
+        "name": "appllama-usage"
+      }
+    ]
+  },
+  {
+    "repo": "vercel-labs/agent-desktop",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/agent-desktop",
+        "name": "agent-desktop"
+      },
+      {
+        "path": "skills/agent-desktop-windows",
+        "name": "agent-desktop-windows"
+      }
+    ]
+  },
+  {
+    "repo": "NVIDIA/SkillSpector",
+    "ref": "main",
+    "mappings": [
+      {
+        "path": "skills/skill-inspector",
+        "name": "skill-inspector"
+      }
+    ]
   }
 ]
