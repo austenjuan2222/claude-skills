@@ -107,7 +107,8 @@ AUTO_SYNC = "--auto-sync" in sys.argv
 def run_auto_sync():
     """第一次就先同步並把 ~/.claude/skills 連到 repo，之後每次開 Claude Code 由 session_start.py 自動做。"""
     r = subprocess.run([sys.executable, str(TOOL_DIR.parent / "skill_sync.py"), "--auto"],
-                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+                       capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     step("auto-sync on: " + (r.stdout.strip() or "already in sync"))
 
 

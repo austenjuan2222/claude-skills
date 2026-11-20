@@ -56,7 +56,8 @@ def auto_sync(lines: list[str]):
     try:
         r = subprocess.run([sys.executable, str(tool), "--auto"], capture_output=True, text=True,
                            encoding="utf-8", errors="replace", timeout=AUTO_TIMEOUT,
-                           env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never"})
+                           env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never",
+                                "PYTHONIOENCODING": "utf-8"})
         out = r.stdout.strip()
         if out:
             print(out)  # 注入對話，讓 Claude 告訴使用者這次同步了什麼

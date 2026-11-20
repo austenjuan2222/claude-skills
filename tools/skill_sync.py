@@ -537,6 +537,8 @@ def install_hook():
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):  # Windows 預設 cp950，呼叫端用 UTF-8 讀
+        sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--weekly", action="store_true", help="距上次成功執行未滿 7 天就跳過；只輸出摘要")
