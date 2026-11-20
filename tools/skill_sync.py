@@ -5,7 +5,7 @@
 不讀取、輸出或儲存任何金鑰／token。
 """
 import argparse, datetime as dt, fnmatch, glob, hashlib, json, os, re, socket
-import sqlite3, subprocess, sys
+import posixpath, sqlite3, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -208,13 +208,56 @@ def compare(repo, branch, label):
                 db_count=len(rows) if rows is not None else None, base=base)
 
 
-def touches_protected(paths):
+REA_LABEL = "REA 外部參考路徑修正"
+REA_LINK = re.compile(r"github\.com/morluto/rea/(?:blob|tree|raw)/([^/\s)>]+)", re.I)
+MD_LINK = re.compile(r"\]\(\s*<?([^)\s>]+)")
+
+
+def rea_fix_issues(path, text, exists):
+    """REA 修正 = 上游相對連結改成釘選 commit 的 GitHub 網址。回傳被破壞的原因，空 list 表示修正仍在。"""
+    if text is None:
+        return ["檔案被刪除"]
+    issues = [f"未釘選 commit：{m.group(0)}" for m in REA_LINK.finditer(text)
+              if not re.fullmatch(r"[0-9a-f]{40}", m.group(1))]
+    base = posixpath.dirname(path)
+    for m in MD_LINK.finditer(text):
+        t = m.group(1).split("#")[0]
+        if not t or t.startswith("/") or re.match(r"[a-z][a-z0-9+.-]*:", t, re.I):
+            continue
+        if not exists(posixpath.normpath(posixpath.join(base, t))):
+            issues.append(f"相對連結指向不存在的檔案：{t}")
+    return issues
+
+
+def touches_protected(paths, read, exists):
+    """read(path) 取內容（不存在回 None），exists(path) 判斷檔案在不在；路徑皆為 repo 內 posix 相對路徑。
+    REA 只在 Markdown 內容真的破壞修正時才擋；其他保護項目只要路徑被改動就擋。"""
     hits = []
     for p in paths:
+        p = p.replace("\\", "/")
         for label, rx in PROTECTED.items():
-            if rx.search(p.replace("\\", "/")):
+            if not rx.search(p):
+                continue
+            if label == REA_LABEL:
+                if p.lower().endswith(".md"):
+                    hits += [f"{label}: {p}（{i}）" for i in dict.fromkeys(rea_fix_issues(p, read(p), exists))]
+            else:
                 hits.append(f"{label}: {p}")
     return hits
+
+
+def tree_reader(repo, ref):
+    def read(p):
+        rc, out = git(repo, "show", f"{ref}:{p}", show=False)
+        return None if rc else out
+    return read, lambda p: git(repo, "cat-file", "-e", f"{ref}:{p}", show=False)[0] == 0
+
+
+def worktree_reader(repo):
+    def read(p):
+        f = repo / p
+        return f.read_text(encoding="utf-8", errors="replace") if f.is_file() else None
+    return read, lambda p: (repo / p).exists()
 
 
 # ---------- 4. 使用率 ----------
@@ -346,7 +389,7 @@ def sync(repo, branch, host, today, dry):
     problems, commits = [], []
     _, st = git(repo, "status", "--porcelain", show=False)
     changed = [l[3:].strip().strip('"') for l in st.splitlines() if l.strip()]
-    hits = touches_protected(changed)
+    hits = touches_protected(changed, *worktree_reader(repo))
     if hits:
         problems.append("本機修改涉及必須保留項目，停止同步：" + "; ".join(hits))
         return problems, commits
@@ -382,7 +425,7 @@ def sync(repo, branch, host, today, dry):
     ahead, behind = (int(x) for x in cnt.split())
     if behind:
         _, incoming = git(repo, "diff", "--name-only", f"HEAD...origin/{branch}", show=False)
-        hits = touches_protected(incoming.splitlines())
+        hits = touches_protected(incoming.splitlines(), *tree_reader(repo, f"origin/{branch}"))
         if hits:
             problems.append("遠端更新會改動必須保留項目，停止 pull：" + "; ".join(hits))
             return problems, commits
