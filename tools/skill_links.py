@@ -27,7 +27,16 @@ IGNORE_DIRS = {".git", "__pycache__", "node_modules", ".venv"}
 
 
 def is_link(p: Path) -> bool:
-    return p.is_symlink() or bool(getattr(p, "is_junction", lambda: False)())
+    """symlink 或 Windows junction（Python 3.11 也要認得）。"""
+    if os.path.islink(p):
+        return True
+    isjunction = getattr(os.path, "isjunction", None)  # Python 3.12+
+    if isjunction:
+        return bool(isjunction(p))
+    try:  # Python 3.11 以前：Windows junction 是帶 reparse-point 屬性的資料夾
+        return bool(getattr(os.lstat(p), "st_file_attributes", 0) & 0x400)
+    except OSError:
+        return False
 
 
 def make_link(link: Path, target: Path):

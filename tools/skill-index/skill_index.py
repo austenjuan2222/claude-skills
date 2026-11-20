@@ -225,7 +225,15 @@ class GitInfo:
 
 def is_link(p: str) -> bool:
     """symlink 或 Windows junction：~/.claude/skills 的連結指向 repo，repo 本身已經是索引根目錄，不重複收錄。"""
-    return os.path.islink(p) or bool(getattr(os.path, "isjunction", lambda _: False)(p))
+    if os.path.islink(p):
+        return True
+    isjunction = getattr(os.path, "isjunction", None)  # Python 3.12+
+    if isjunction:
+        return bool(isjunction(p))
+    try:  # Python 3.11 以前：Windows junction 是帶 reparse-point 屬性的資料夾
+        return bool(getattr(os.lstat(p), "st_file_attributes", 0) & 0x400)
+    except OSError:
+        return False
 
 
 def iter_files(cfg: dict):

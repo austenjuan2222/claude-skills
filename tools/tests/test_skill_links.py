@@ -97,5 +97,25 @@ class LinkSkillsTest(unittest.TestCase):
         self.assertEqual(rep["linked"], [])
 
 
+class JunctionDetectionTest(unittest.TestCase):
+    """Python 3.11 沒有 os.path.isjunction / Path.is_junction，要靠 lstat 的 reparse-point 屬性判斷。"""
+
+    def test_reparse_point_counts_as_link_without_isjunction(self):
+        from unittest import mock
+        fake = mock.Mock(st_file_attributes=0x400)
+        with mock.patch.object(sl.os.path, "islink", return_value=False), \
+                mock.patch.object(sl.os.path, "isjunction", None, create=True), \
+                mock.patch.object(sl.os, "lstat", return_value=fake):
+            self.assertTrue(sl.is_link(Path("C:/x")))
+
+    def test_plain_dir_is_not_link_without_isjunction(self):
+        from unittest import mock
+        fake = mock.Mock(st_file_attributes=0x10)  # FILE_ATTRIBUTE_DIRECTORY only
+        with mock.patch.object(sl.os.path, "islink", return_value=False), \
+                mock.patch.object(sl.os.path, "isjunction", None, create=True), \
+                mock.patch.object(sl.os, "lstat", return_value=fake):
+            self.assertFalse(sl.is_link(Path("C:/x")))
+
+
 if __name__ == "__main__":
     unittest.main()
