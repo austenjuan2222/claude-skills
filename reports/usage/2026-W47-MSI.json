@@ -1,8 +1,8 @@
 {
   "week": "2026-W47",
   "host": "MSI",
-  "generated_at": "2026-11-18T15:19:01.038851+08:00",
-  "window_start": "2026-11-11T15:19:01.038851+08:00",
+  "generated_at": "2026-11-20T10:33:05.193471+08:00",
+  "window_start": "2026-11-13T10:33:05.193471+08:00",
   "total_skills": 99,
   "used_skills": 0,
   "usage_rate": 0.0,
@@ -126,7 +126,7 @@
     "built-in-browser"
   ],
   "sources": {
-    "code_jsonl_files": 10,
+    "code_jsonl_files": 13,
     "cowork_jsonl_files": 0,
     "note": "未含 Cowork 紀錄"
   },
