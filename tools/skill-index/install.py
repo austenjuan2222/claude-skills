@@ -2,6 +2,7 @@
 """One-click setup of the skill index on this PC (safe to re-run; also used to update/migrate).
 
   python tools/skill-index/install.py              install / repair
+  python tools/skill-index/install.py --auto-sync  also sync + link ~/.claude/skills to the repo on every session start
   python tools/skill-index/install.py --uninstall  remove MCP server, hooks and CLAUDE.md block
 
 What it does:
@@ -78,6 +79,8 @@ def write_config():
         if repo not in key:
             key.insert(0, repo)
     cfg.setdefault("latest_version_only", ["~/.claude/plugins/cache"])
+    if AUTO_SYNC:
+        cfg["auto_sync"] = True
     path.write_text(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     step(f"config: {path}  (repo root: {repo})")
 
@@ -97,6 +100,16 @@ def remove_legacy_code():
 
 
 # ---------------------------------------------------------------- 2. index
+
+AUTO_SYNC = "--auto-sync" in sys.argv
+
+
+def run_auto_sync():
+    """第一次就先同步並把 ~/.claude/skills 連到 repo，之後每次開 Claude Code 由 session_start.py 自動做。"""
+    r = subprocess.run([sys.executable, str(TOOL_DIR.parent / "skill_sync.py"), "--auto"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    step("auto-sync on: " + (r.stdout.strip() or "already in sync"))
+
 
 def build_index():
     conn = sqlite3.connect(":memory:")
@@ -144,7 +157,7 @@ def write_hooks(remove_only=False):
             "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell",
             "hooks": [{"type": "command", "command": f'"{py()}" "{(TOOL_DIR / "guard_hook.py").as_posix()}"'}]})
         hooks["SessionStart"].append({
-            "hooks": [{"type": "command", "timeout": 90,
+            "hooks": [{"type": "command", "timeout": 180,
                        "command": f'"{py()}" "{(TOOL_DIR / "session_start.py").as_posix()}"'}]})
     for event in ("PreToolUse", "SessionStart"):
         if not hooks[event]:
@@ -186,6 +199,8 @@ def main():
         return
     write_config()
     remove_legacy_code()
+    if AUTO_SYNC:
+        run_auto_sync()
     build_index()
     register_mcp()
     write_hooks()

@@ -9,6 +9,9 @@ import posixpath, sqlite3, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import skill_links  # noqa: E402
+
 TZ = dt.timezone(dt.timedelta(hours=8))  # Asia/Taipei
 HOME = Path.home()
 REMOTE_RE = re.compile(r"github\.com[:/]+austenjuan2222/claude-skills(\.git)?/?$", re.I)
@@ -20,6 +23,10 @@ PROTECTED = {  # 必須保留的修正；同步若改動相關路徑就停下回
     "REA 外部參考路徑修正": re.compile(r"(^|/)rea[-_/]", re.I),
     "Design DNA sharp 0.35.5 修補": re.compile(r"design-dna", re.I),
 }
+# Anthropic 內建 skill 的本機複本：三個地方都由 Anthropic 提供，授權也不允許放進 repo，所以不列為問題
+ANTHROPIC_BUILTIN = {"built-in-browser", "chrome-browser", "computer-use", "deep-research", "docs", "docx",
+                     "google-workspace", "import-memory", "morning", "pdf", "pptx", "setup-writing-style",
+                     "skill-creator", "xlsx"}
 LOG = []
 CMD_RE = re.compile(r"<command-name>/?([^<\s]+)</command-name>")
 
@@ -452,6 +459,53 @@ def sync(repo, branch, host, today, dry):
     return problems, commits
 
 
+def link_step(repo, dry):
+    """讓 ~/.claude/skills 的每個 repo skill 都連到 repo（見 skill_links.py）。回傳 (報告, 問題清單)。"""
+    claude = HOME / ".claude"
+    rep = skill_links.link_skills(repo / "skills", claude / "skills", claude / "skills-backup", dry=dry)
+    log(f"~/.claude/skills 連結：{skill_links.summary(rep)}")
+    problems = []
+    if rep["replaced_different"]:
+        problems.append(f"本機複本和 repo 內容不同，{'將' if dry else '已'}備份後改用 repo 版本："
+                        f"{rep['replaced_different']}（備份：{rep['backup_dir'] or '~/.claude/skills-backup'}）")
+    if rep["errors"]:
+        problems.append(f"建立連結失敗：{rep['errors']}")
+    return rep, problems
+
+
+def auto_mode():
+    """開 Claude Code 時由 session_start.py 呼叫：commit → pull --rebase → push → 連結 skills。
+    不產生使用率報告，沒事不輸出；保護規則、機密檔檢查、禁止 --force 全部照舊。"""
+    global QUIET
+    QUIET = True
+    repos = find_repos()
+    if not repos:
+        return 0
+    _, real = skills_link_kind()
+    primary = next((r for r in repos if real and str(real).lower().startswith(str(r).lower())), repos[0])
+    now = dt.datetime.now(TZ)
+    msgs = []
+    if git(primary, "fetch", "origin")[0]:
+        msgs.append("連不到 GitHub，這次沒有同步")
+    else:
+        br = default_branch(primary)
+        _, incoming = git(primary, "rev-list", "--count", f"HEAD..origin/{br}", show=False)
+        problems, commits = sync(primary, br, socket.gethostname(), now.date().isoformat(), False)
+        msgs += problems
+        if not problems and int(incoming.strip() or 0):
+            head = git(primary, "rev-parse", "--short", "HEAD", show=False)[1].strip()
+            msgs.append(f"已從 GitHub 拉下 {incoming.strip()} 個 commit（{head}）")
+        if any(c.startswith("pushed:") for c in commits):
+            msgs.append("本機改動已推上 GitHub")
+    rep, problems = link_step(primary, False)
+    msgs += problems
+    if rep["linked"] or rep["relinked"] or rep["replaced_identical"] or rep["removed_stale"]:
+        msgs.append(f"skills 連結：{skill_links.summary(rep)}")
+    if msgs:
+        print("[skills 自動同步] " + "；".join(msgs))
+    return 0
+
+
 def reindex(repo, dry):
     if dry:
         return
@@ -487,7 +541,10 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--weekly", action="store_true", help="距上次成功執行未滿 7 天就跳過；只輸出摘要")
     ap.add_argument("--install-hook", action="store_true", help="在 Claude Code 啟動時自動執行 --weekly")
+    ap.add_argument("--auto", action="store_true", help="全自動同步（由 session_start.py 呼叫）：不產生報告、沒事不輸出")
     a = ap.parse_args()
+    if a.auto:
+        return auto_mode()
     if a.install_hook:
         return install_hook()
     stamp = HOME / ".claude" / "skill-sync-last.txt"
@@ -544,6 +601,7 @@ def main():
         problems, commits = ["連不到 GitHub（fetch 失敗），未同步；請確認網路後重跑"], []
     else:
         problems, commits = sync(primary, br, host, today, a.dry_run)
+    problems += link_step(primary, a.dry_run)[1]
     reindex(primary, a.dry_run)
     git(primary, "fetch", "origin", show=False)
     after = compare(primary, br, "同步後")
@@ -561,8 +619,9 @@ def main():
     log(f"同步前→後：dirty {len(before['dirty'])}→{len(after['dirty'])}、ahead {before['ahead']}→{after['ahead']}、"
         f"behind {before['behind']}→{after['behind']}、一致 {before['consistent']}→{after['consistent']}")
     log(f"commit：{commits or '無'}")
-    if after.get("copy_only"):
-        problems.append(f"~/.claude/skills 有 {len(after['copy_only'])} 個 skill 不在 repo（未自動加入，請決定是否納管）")
+    own_only = [s for s in after.get("copy_only", []) if s not in ANTHROPIC_BUILTIN]
+    if own_only:
+        problems.append(f"~/.claude/skills 有 {len(own_only)} 個 skill 不在 repo（未自動加入，請決定是否納管）：{own_only}")
     log(f"問題：{problems or '無'}")
     top5 = ", ".join(f"{t['skill']}({t['calls']})" for t in rep["top10"][:5]) or "無"
     log(f"使用率：{rep['usage_rate']:.1%}（{rep['used_skills']}/{rep['total_skills']}）；前5：{top5}；"

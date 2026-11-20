@@ -16,6 +16,22 @@ python "$HOME/Documents/GitHub/claude-skills/tools/skill-index/install.py"
 裝完後開一個新的 Claude Code 工作階段就能用。重複執行 `install.py` 也安全，可以拿來修復設定或套用工具的新版本。
 解除安裝：`python install.py --uninstall`
 
+### 全自動同步（筆電、桌機）
+
+```bash
+python "$HOME/Documents/GitHub/claude-skills/tools/skill-index/install.py" --auto-sync
+```
+
+加上 `--auto-sync` 後，每次開 Claude Code 都會自動：commit 本機改動 → `pull --rebase` → `push` → 把 `~/.claude/skills` 裡的每個 repo skill 換成連到 repo 的連結（Windows 用 junction）→ 更新索引。
+所以三個地方（筆電、桌機、雲端）用的都是 GitHub 上同一份 skill。
+
+- 原本 `~/.claude/skills` 裡的複本不會被刪：一律先移到 `~/.claude/skills-backup/<時間>/`，內容和 repo 不同的會在對話中提醒。
+- 不在 repo 的 skill（例如 Anthropic 內建的 `docx`、`pdf` 複本）完全不動。
+- 保護規則、機密檔檢查、禁止 `--force` 都照舊；遇到衝突會停下來告訴你，不會亂合。
+- 沒有東西要同步時不會輸出任何訊息。
+
+只想看會做什麼：`python tools/skill_links.py --dry-run`
+
 ## 安裝後的檔案位置
 
 | 位置 | 內容 |
@@ -35,7 +51,9 @@ python "$HOME/Documents/GitHub/claude-skills/tools/skill-index/install.py"
 | `guard_hook.py` | 禁止 Agent 改寫技能庫，也禁止 Agent 自己建立 Markdown 記憶檔 |
 | `session_start.py` | 每個工作階段開始時，對 Git 管理的根目錄只執行 `fetch`；有新版時在對話中提醒（不自動 pull，經使用者同意才 `pull --ff-only`），再做增量同步 |
 | `ROUTER_PROMPT.md` | Agent 的路由規則，安裝時會寫進 `CLAUDE.md` |
-| `install.py` | 一鍵安裝、修復、解除安裝 |
+| `install.py` | 一鍵安裝、修復、解除安裝；`--auto-sync` 開啟全自動同步 |
+| `../skill_links.py` | 把 `~/.claude/skills` 的 repo skill 換成連到 repo 的連結（只備份、不刪除） |
+| `../tests/` | 單元測試：`python -m unittest discover -s tools/tests` |
 
 ## 日常使用
 

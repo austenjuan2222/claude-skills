@@ -223,6 +223,11 @@ class GitInfo:
 
 # ---------------------------------------------------------------- scanning
 
+def is_link(p: str) -> bool:
+    """symlink 或 Windows junction：~/.claude/skills 的連結指向 repo，repo 本身已經是索引根目錄，不重複收錄。"""
+    return os.path.islink(p) or bool(getattr(os.path, "isjunction", lambda _: False)(p))
+
+
 def iter_files(cfg: dict):
     exts = {e.lower() for e in cfg["include_ext"]}
     skip_dirs, skip_files = set(cfg["exclude_dirs"]), set(cfg["exclude_files"])
@@ -231,7 +236,7 @@ def iter_files(cfg: dict):
         if not os.path.isdir(root):
             continue
         for dirpath, dirnames, filenames in os.walk(root):
-            dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+            dirnames[:] = [d for d in dirnames if d not in skip_dirs and not is_link(os.path.join(dirpath, d))]
             if any(os.path.normcase(dirpath).startswith(v) for v in versioned):
                 dirnames[:] = latest_versions(dirnames)
             for fn in filenames:
