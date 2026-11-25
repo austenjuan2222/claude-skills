@@ -289,6 +289,9 @@ def namespace_for(skill_dir: Path, root: str) -> str:
     parts = skill_dir.parts
     if "skills" in parts[:-1]:
         i = len(parts) - 1 - parts[::-1].index("skills", 1)
+        # plugin cache layout: plugins/cache/<marketplace>/<plugin>/<version>/skills
+        if i >= 5 and parts[i - 5].lower() == "plugins" and parts[i - 4].lower() == "cache":
+            return parts[i - 2]
         if i > 0 and parts[i - 1] not in (".claude",):
             return parts[i - 1]
     return Path(root).name
