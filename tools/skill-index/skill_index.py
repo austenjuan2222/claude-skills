@@ -297,10 +297,32 @@ def namespace_for(skill_dir: Path, root: str) -> str:
     return Path(root).name
 
 
+def plugin_declares(skill_dir: Path) -> bool:
+    """A plugin cache (plugins/cache/<marketplace>/<plugin>/<version>) can hold a whole repo. When its
+    marketplace.json lists the plugin's skills, only those are loaded by Claude; index only those."""
+    parts = skill_dir.parts
+    for i in range(len(parts) - 4):
+        if parts[i].lower() == "plugins" and parts[i + 1].lower() == "cache":
+            root, plugin = Path(*parts[:i + 5]), parts[i + 3]
+            try:
+                mk = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                return True
+            for p in mk.get("plugins", []):
+                src = p.get("source")
+                if p.get("name") == plugin and isinstance(p.get("skills"), list) and isinstance(src, str):
+                    base = root / src
+                    return any((base / s).resolve() == skill_dir.resolve() for s in p["skills"])
+            return True
+    return True
+
+
 def build_row(root: str, path: Path, git: GitInfo) -> dict | None:
     skill_dir = find_skill_dir(path, root)
     if skill_dir is None:
         return None  # stray markdown outside any skill: not part of the library
+    if not plugin_declares(skill_dir):
+        return None  # copied along with the plugin's repo, but not part of the installed plugin
     raw = path.read_bytes()
     text = raw.decode("utf-8", errors="replace")
     is_html = path.suffix.lower() in (".html", ".htm")
